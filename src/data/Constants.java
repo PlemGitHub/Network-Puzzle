@@ -20,7 +20,13 @@ public interface Constants {
 	
 	Point[] BUTTON_PANEL_ELEMENTS_POSITION = {
 								new Point(0,0),
-								new Point(0, _BUTTON_HEIGHT)
+								new Point(0, _BUTTON_HEIGHT),
+								new Point(0, _BUTTON_HEIGHT*3)
 								};
-		int IMAGE_SIZE = 101;
+	int IMAGE_SIZE = 101;
+	
+	int TIMER_DELAY = 8;
+	int D_ANGLE = 10;
+	
+	int START_LEVEL = 10;
 }

@@ -40,8 +40,7 @@ public class GameFieldPanel extends JPanel implements Constants{
 	}
 
 	private void generateNewLevel() {
-		currentLevel = (currentLevel == 0)? 10:currentLevel;
-		cellsQ = (int)(Math.sqrt(currentLevel))+2;
+		cellsQ = (int)(Math.sqrt(currentLevel))+1;
 		junctions = new int[cellsQ][cellsQ][4];
 		genLevel = new GenerateLevel(cellsQ, currentLevel);
 	}
@@ -71,7 +70,6 @@ public class GameFieldPanel extends JPanel implements Constants{
 					int cellType = genLevel.getCellType(i, j);
 					defineCellJunctions(i, j, cellType);
 					Cell cell = new Cell(this, cellType, i, j);
-					cell.setBounds(cellSize*i, cellSize*j, cellSize, cellSize);
 					add(cell);
 				}
 			}
@@ -125,7 +123,7 @@ public class GameFieldPanel extends JPanel implements Constants{
 	public void checkEndOfLevel(){
 		if (isLevelComplete()){
 			JOptionPane.showMessageDialog(mainPanel, "Level complete!", "Success", JOptionPane.INFORMATION_MESSAGE);
-			mainPanel.createNewGameField(currentLevel+1);
+			mainPanel.createNewGameField(currentLevel+1, 0);
 		}
 	}
 	
@@ -187,5 +185,9 @@ public class GameFieldPanel extends JPanel implements Constants{
 	
 	public int getCurrentLevel(){
 		return currentLevel;
+	}
+	
+	public int getCellSize(){
+		return cellSize;
 	}
 }

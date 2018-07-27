@@ -1,5 +1,6 @@
 package mech;
 
+import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
@@ -60,21 +61,24 @@ public class FileWork implements Constants{
 		return cellImages[i];
 	}
 
-	public void saveLevel(int currentLevel) throws IOException {
+	public void saveLevel(int currentLevel, int maxLevel) throws IOException {
 		if (!isSaveFileExists())
 			saveFile.createNewFile();
 		
 		BufferedWriter out = new BufferedWriter(new FileWriter(saveFile));
 		
 		out.write(String.valueOf(currentLevel));
+		out.write(System.lineSeparator());
+		out.write(String.valueOf(maxLevel));
 		out.close();
 	}
 
-	public int loadCurrentLevelFromSaveFile() throws IOException {
+	public Point loadCurrentLevelFromSaveFile() throws IOException {
 			BufferedReader in = new BufferedReader(new FileReader(saveFile));
 			int currentLevel = Integer.valueOf(in.readLine());
+			int maxLevel = Integer.valueOf(in.readLine());
 			in.close();
-			return currentLevel;
+			return new Point(currentLevel, maxLevel);
 //		}
 	}
 }

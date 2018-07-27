@@ -2,6 +2,7 @@ package visual;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowEvent;
 import java.awt.event.WindowListener;
@@ -25,6 +26,7 @@ public class MainPanel extends JPanel implements Constants, WindowListener{
 	private ButtonPanel buttonPanel;
 	private Screen screen;
 	private FileWork fileWork = new FileWork(this);
+	private int maxLevel;
 	
 	public MainPanel(Screen screen) {
 		this.screen = screen;
@@ -40,17 +42,19 @@ public class MainPanel extends JPanel implements Constants, WindowListener{
 		if (fileWork.isSaveFileExists())
 			loadGameIfSaveFileExists();
 		else
-			createNewGameField(0);
+			createNewGameField(0, 0);
 	}
 
 	private void loadGameIfSaveFileExists() {
-		int currentLevel = 0;
+		int currentLevel = 0, maxLevel = 0;		
 		try {
-			currentLevel = fileWork.loadCurrentLevelFromSaveFile();
+			Point levels = fileWork.loadCurrentLevelFromSaveFile();
+			currentLevel = levels.x;
+			maxLevel = levels.y;
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
-		createNewGameField(currentLevel);
+		createNewGameField(currentLevel, maxLevel);
 	}
 
 	private Action exitAction = new AbstractAction() {
@@ -63,16 +67,30 @@ public class MainPanel extends JPanel implements Constants, WindowListener{
 	public FileWork getFileWork(){
 		return fileWork;
 	}
-	
-	public void createNewGameField(int currentLevel){
+	/**
+	 * 
+	 * @param currentLevel - if 0 -> resets current level to START_LEVEL;
+	 * @param maxLevel - if 0 -> checks if new max level reached.
+	 */
+	public void createNewGameField(int currentLevel, int maxLevel){
+		currentLevel = (currentLevel == 0)? START_LEVEL:currentLevel;
+		if (maxLevel == 0 && currentLevel >= this.maxLevel){
+			maxLevel = currentLevel;
+		}
+		this.maxLevel = maxLevel;
 		for (Component c: getComponents()) {
 			if (c instanceof GameFieldPanel)
 				remove(c);
 		}
 		gameFieldPanel = new GameFieldPanel(this, currentLevel);
 		add(gameFieldPanel);
+		buttonPanel.setCurrentLevelText(String.valueOf(currentLevel));
+		buttonPanel.setMaxLevelText(maxLevel);
 		repaint();
-		buttonPanel.setCurrentLevelText(gameFieldPanel.getCurrentLevel());
+	}
+	
+	public int getMaxLevel(){
+		return maxLevel;
 	}
 
 	public void deleteGameField() {
@@ -111,7 +129,7 @@ public class MainPanel extends JPanel implements Constants, WindowListener{
 		switch (answer) {
 		case JOptionPane.YES_OPTION: 
 			try {
-				fileWork.saveLevel(gameFieldPanel.getCurrentLevel());
+				fileWork.saveLevel(gameFieldPanel.getCurrentLevel(), maxLevel);
 				System.exit(0);
 			} catch (IOException e1) {
 				e1.printStackTrace();

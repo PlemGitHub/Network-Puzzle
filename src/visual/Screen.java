@@ -39,11 +39,4 @@ public class Screen implements Constants{
 		jLayeredPane.add(c, new Integer(i));
 		jLayeredPane.repaint();
 	}
-	
-//	public void removeGlass(){
-//		for (Component c : jLayeredPane.getComponents()) {
-//			if (c instanceof Glass)
-//				jLayeredPane.remove(c);
-//		}
-//	}
 }
